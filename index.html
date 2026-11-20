@@ -1,1 +1,82 @@
-
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ШаверMAN — Луцьк</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f3f3f3;color:#222;font-family:Arial,sans-serif}
+header{background:#252525;color:white;padding:25px 18px;text-align:center}
+.logo{font-size:34px;font-weight:900;letter-spacing:1px}
+header p{color:#ddd;margin:8px 0 0}
+main{max-width:950px;margin:auto;padding:22px 16px}
+h2{margin-top:28px}
+.intro{background:#333;color:white;padding:30px 20px;border-radius:14px}
+.intro h1{font-size:30px;margin:0 0 10px}
+.intro p{color:#ddd}
+.menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.item{background:white;border-radius:12px;padding:18px;border:1px solid #ddd}
+.item h3{margin:0 0 8px}
+.item p{color:#666;font-size:14px}
+button{background:#e87528;color:white;border:0;border-radius:8px;padding:12px 16px;font-weight:bold;cursor:pointer}
+.cart{background:white;border-radius:12px;padding:18px;margin-top:28px}
+input,select{width:100%;padding:13px;margin:7px 0 12px;border:1px solid #ccc;border-radius:8px}
+footer{text-align:center;padding:25px;color:#777}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">ШаверMAN</div>
+<p>Смак, який хочеться повторити</p>
+</header>
+<main>
+<section class="intro">
+<h1>Твоя улюблена шаверма</h1>
+<p>Обирай свою, додавай у кошик та оформлюй замовлення.</p>
+</section>
+<h2>Наше меню</h2>
+<div class="menu">
+<div class="item"><h3>Стандарт</h3><p>290 г</p><button onclick="add('Стандарт')">Додати</button></div>
+<div class="item"><h3>XL</h3><p>385 г</p><button onclick="add('XL')">Додати</button></div>
+<div class="item"><h3>Від Шефа</h3><p>485 г</p><button onclick="add('Від Шефа')">Додати</button></div>
+<div class="item"><h3>Гавайська</h3><p>380 г</p><button onclick="add('Гавайська')">Додати</button></div>
+<div class="item"><h3>Цезар</h3><p>330 / 425 г</p><button onclick="add('Цезар')">Додати</button></div>
+<div class="item"><h3>Теріакі</h3><p>330 / 425 г</p><button onclick="add('Теріакі')">Додати</button></div>
+<div class="item"><h3>Бургер шаурма</h3><p>295 / 405 г</p><button onclick="add('Бургер шаурма')">Додати</button></div>
+<div class="item"><h3>BBQ</h3><p>310 / 405 г</p><button onclick="add('BBQ')">Додати</button></div>
+</div>
+<section class="cart">
+<h2>Кошик</h2>
+<div id="cart">Поки що порожньо</div>
+<h3>Оформлення замовлення</h3>
+<input id="name" placeholder="Ваше ім'я">
+<input id="phone" placeholder="Номер телефону">
+<select id="delivery">
+<option>Самовивіз</option>
+<option>Доставка</option>
+</select>
+<button onclick="order()">Підготувати замовлення</button>
+<p id="result"></p>
+</section>
+</main>
+<footer>ШаверMAN · Луцьк</footer>
+<script>
+let cart=[];
+function add(name){
+cart.push(name);
+document.getElementById('cart').innerHTML=cart.map((x,i)=>`${i+1}. ${x}`).join('<br>');
+}
+function order(){
+if(!cart.length){alert('Спочатку додайте страву в кошик');return;}
+let name=document.getElementById('name').value.trim();
+let phone=document.getElementById('phone').value.trim();
+if(!name||!phone){alert("Вкажіть ім'я та телефон");return;}
+let text=`Замовлення ШаверMAN\nІм'я: ${name}\nТелефон: ${phone}\nОтримання: ${document.getElementById('delivery').value}\nСтрави:\n${cart.join('\n')}`;
+document.getElementById('result').innerHTML='Замовлення підготовлено. Надішліть його закладу телефоном.';
+if(navigator.share){navigator.share({title:'Замовлення ШаверMAN',text:text}).catch(()=>{});}
+else{alert(text);}
+}
+</script>
+</body>
+</html>
