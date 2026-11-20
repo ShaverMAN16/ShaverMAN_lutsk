@@ -67,15 +67,42 @@ function add(name){
 cart.push(name);
 document.getElementById('cart').innerHTML=cart.map((x,i)=>`${i+1}. ${x}`).join('<br>');
 }
-function order(){
-if(!cart.length){alert('Спочатку додайте страву в кошик');return;}
+async function order(){
+if(!cart.length){
+alert('Спочатку додайте страву в кошик');
+return;
+}
+
 let name=document.getElementById('name').value.trim();
 let phone=document.getElementById('phone').value.trim();
-if(!name||!phone){alert("Вкажіть ім'я та телефон");return;}
-let text=`Замовлення ШаверMAN\nІм'я: ${name}\nТелефон: ${phone}\nОтримання: ${document.getElementById('delivery').value}\nСтрави:\n${cart.join('\n')}`;
-document.getElementById('result').innerHTML='Замовлення підготовлено. Надішліть його закладу телефоном.';
-if(navigator.share){navigator.share({title:'Замовлення ШаверMAN',text:text}).catch(()=>{});}
-else{alert(text);}
+let delivery=document.getElementById('delivery').value;
+
+if(!name||!phone){
+alert("Вкажіть ім'я та телефон");
+return;
+}
+
+try {
+let response=await fetch('https://shaverman-lutsk.shaverman-16.workers.dev/api/order',{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({
+name:name,
+phone:phone,
+items:cart.join(', '),
+total:'Не вказано',
+delivery:delivery
+})
+});
+
+if(!response.ok) throw new Error('Помилка');
+
+alert('Замовлення успішно надіслано!');
+cart=[];
+document.getElementById('cart').innerHTML='';
+} catch(error) {
+alert('Не вдалося надіслати замовлення. Спробуйте ще раз.');
+}
 }
 </script>
 </body>
